@@ -37,7 +37,13 @@ from rawjson, json_each(impression, '$."matchedTargetingCriteria"') as criteria
 group by criterion
 order by  typeCount desc
 limit 10''').fetchall()
-
+cats = list()
+nrs = list()
+for r in nrcategories:
+    for t, n in r:
+        cats.append(t)
+        cats.append(n)
+nrcategories = pd.DataFrame({'Criteria type': cats, 'Count': nrs})
 
 st.markdown(f'''This dataset has ad data from {dates[0][0]} to {dates[-1][0]}.''')
 st.markdown('During that time, you were…')
