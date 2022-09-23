@@ -31,12 +31,18 @@ from rawjson)
 
 nrads = cur.execute('''select count(impression)from rawjson''').fetchone()[0]
 
+nrcategories = cur.execute('''select json_extract(criteria.value, '$."targetingType"') as criterion,
+        count (criteria.value) as typeCount
+from rawjson, json_each(impression, '$."matchedTargetingCriteria"') as criteria
+group by criterion
+order by  typeCount desc
+limit 10''').fetchall()
+
 
 st.markdown(f'''This dataset has ad data from {dates[0][0]} to {dates[-1][0]}.''')
-
 st.markdown('During that time, you were…')
 st.markdown(f'''* …targeted by {nradvertisers:,} advertisers.
 * …shown {nrads:,} ads.''')
-
+st.write(nrcategories)
 st.markdown('For more details, explore the other pages!')
 con.close()
