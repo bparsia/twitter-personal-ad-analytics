@@ -24,14 +24,16 @@ from rawjson
 group by Day
 order by Day''').fetchall()
 
-st.markdown(f'''This dataset has ad data from {dates[0][0]} to {dates[-1][0]}.''')
-
 nradvertisers = cur.execute('''select count(distinct advertiser) as nrcorps from
 (select  json_extract(impression, '$."advertiserInfo"."advertiserName"') as advertiser
 from rawjson)
 ''').fetchone()[0]
 
 nrads = cur.execute('''select count(impression)from rawjson''').fetchone()[0]
+
+
+st.markdown(f'''This dataset has ad data from {dates[0][0]} to {dates[-1][0]}.''')
+
 st.markdown('During that time, you were…')
 st.markdown(f'''* …targeted by {nradvertisers:,} advertisers.
 * …shown {nrads:,} ads.''')
